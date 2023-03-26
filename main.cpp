@@ -1,20 +1,31 @@
 #include "iostream"
 #include "vector"
+#include "algorithm"
+#include <algorithm>
 using namespace::std;
 class Solution {
-    int dp[30005][0];
-    //dp[i][0]表示第i天（处理数组第i项时）手上拥有的最大现金数
-    //0表示当前持有的是现金不是股票,所以我们是从dp[0][0]=0开始的,如果买了就是dp[0][1]=-price[0]
-
-
 public:
-    int maxProfit(vector<int>& prices) {
-        dp[0][0]=0;
-        dp[0][1]=-prices[0];
-        for(int i=1;i<prices.size();i++){
-            dp[i][0]=max(dp[i-1][1]+prices[i],dp[i-1][0]);
-            dp[i][1]=max(dp[i-1][0]-prices[i],dp[i-1][1]);
+    int nthUglyNumber(int n) {
+        int m2=1,m3=1,m5=1;
+        vector<int>dp(n+1);
+        dp[1]=1;
+        for(int i=2;i<=n;i++){
+            int n2=dp[m2]*2;
+            int n3=dp[m3]*3;
+            int n5=dp[m5]*5;
+            if(n2==min({n2,n3,n5})){
+                dp[i]=n2;
+                m2++;
+            }
+            if(n3==min({n2,n3,n5})){
+                dp[i]=n3;
+                m3++;
+            }
+            if(n5==min({n2,n3,n5})){
+                dp[i]=n5;
+                m5++;
+            }
         }
-        return dp[prices.size()-1][0];
+        return dp[n];
     }
 };

@@ -1,31 +1,27 @@
 #include "iostream"
 #include "vector"
 #include "algorithm"
-#include <algorithm>
 using namespace::std;
 class Solution {
 public:
-    int nthUglyNumber(int n) {
-        int m2=1,m3=1,m5=1;
-        vector<int>dp(n+1);
-        dp[1]=1;
-        for(int i=2;i<=n;i++){
-            int n2=dp[m2]*2;
-            int n3=dp[m3]*3;
-            int n5=dp[m5]*5;
-            if(n2==min({n2,n3,n5})){
-                dp[i]=n2;
-                m2++;
-            }
-            if(n3==min({n2,n3,n5})){
-                dp[i]=n3;
-                m3++;
-            }
-            if(n5==min({n2,n3,n5})){
-                dp[i]=n5;
-                m5++;
+    int longestValidParentheses(string s) {
+        if(s.length()==0)return 0;
+        int len=s.length();
+        vector<int>dp(len,0);
+        dp[0]=0;
+        for(int i=1;i<len;i++){
+            if(s[i]==')'){
+                if(s[i-1]=='('){
+                    dp[i]=dp[i-2]+2;
+                }else if(i-1-dp[i-1]>=0&&dp[i-1-dp[i-1]]=='('){
+                    dp[i]=dp[i-1]+2+(i-2-dp[i-1]>=0?dp[i-2-dp[i-1]]:0);
+                }
             }
         }
-        return dp[n];
+        return *max_element(dp.begin(),dp.end());
     }
 };
+int main(){
+    Solution s;
+    cout<<s.longestValidParentheses("()");
+}
